@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+<?php
+
+extract($_SERVER);
+
+$sql = <<<SQL
+DROP DATABASE `exampleDB`;
+DROP USER `example_user`;
+
+CREATE DATABASE `$DB_NAME`;
+
+GRANT ALL PRIVILEGES ON `$DB_NAME`.* To `$DB_USER`@`%` IDENTIFIED BY '$DB_PASSWORD';
+UPDATE `mysql`.`user` SET Password=PASSWORD('$DB_PASSWORD') WHERE User='root';
+FLUSH PRIVILEGES;
+SQL;
+
+echo $sql;
