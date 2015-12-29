@@ -24,13 +24,12 @@ RUN apt-get install virt-what unzip wget php5-mysql php5-mcrypt php5-gd -y
 
 RUN cp -R "/var/www/example.com" "/installer"
 
-ADD conf/htaccess.txt /installer/example.com/public_html/
-RUN mv -f /installer/example.com/public_html/htaccess.txt /installer/example.com/public_html/.htaccess
-
 RUN  wget -O /installer/concrete.zip http://www.concrete5.org/download_file/-/view/84191/ && \
   unzip /installer/concrete.zip -d /installer/
 
 RUN rm -Rf /installer/example.com/public_html/ && \
   mv /installer/concrete5*/ /installer/example.com/public_html/
+
+ADD conf/htaccess.txt /installer/example.com/public_html/
 
 ENTRYPOINT ["/usr/local/bin/run_stack"]

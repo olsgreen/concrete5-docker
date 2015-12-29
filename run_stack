@@ -10,6 +10,7 @@ fi
 if [ ! -d "/data/example.com" ]; then
   echo "Preparing Apache data..."
   cp -R "/installer/example.com/" "/data/example.com/"
+  mv -f "/data/example.com/public_html/htaccess.txt" "/data/example.com/public_html/.htaccess"
 
   virt-what &> "/installer/vmstat"
   VS_STAT="$(cat /installer/vmstat)"
