@@ -44,7 +44,10 @@ if [[ -f "/installer/database_setup" && "$DB_NAME" != "" ]]; then
   php -f "/installer/database_setup" > "/installer/commands.sql" 
 fi
 
-/etc/init.d/mysql start
+if [ "$DB_NAME" != "" ]; then
+  /etc/init.d/mysql start
+fi
+
 /etc/init.d/apache2 start
 
 if [ -f "/installer/commands.sql" ]; then
@@ -55,4 +58,5 @@ fi
 echo "Removing installer directory..."
 rm "/installer" -Rf
 
+echo "Done."
 read -p "Press Return to Close..."

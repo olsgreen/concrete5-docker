@@ -2,9 +2,6 @@ FROM linode/lamp
 
 MAINTAINER Oliver Green green2go@gmail.com
 
-ENV DB_NAME new_database
-ENV DB_USER new_user
-ENV DB_PASSWORD new_password
 ENV PACKAGE_URL http://www.concrete5.org/download_file/-/view/84191/
 ENV IS_LEGACY false
 
