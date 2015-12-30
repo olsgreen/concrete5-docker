@@ -5,6 +5,7 @@ MAINTAINER Oliver Green green2go@gmail.com
 ENV DB_NAME new_database
 ENV DB_USER new_user
 ENV DB_PASSWORD new_password
+ENV PACKAGE_URL http://www.concrete5.org/download_file/-/view/84191/
 ENV IS_LEGACY false
 
 ADD run_stack /usr/local/bin/
@@ -27,7 +28,7 @@ RUN a2enmod rewrite
 
 RUN cp -R "/var/www/example.com" "/installer"
 
-RUN  wget -O /installer/concrete.zip http://www.concrete5.org/download_file/-/view/84191/ && \
+RUN  wget -O /installer/concrete.zip $PACKAGE_URL && \
   unzip /installer/concrete.zip -d /installer/
 
 RUN rm -Rf /installer/example.com/public_html/ && \
