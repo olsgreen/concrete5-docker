@@ -16,10 +16,17 @@ if [ ! -d "/data/example.com" ]; then
   VS_STAT="$(cat /installer/vmstat)"
 
   if [ "$VS_STAT" != "kvm" ]; then
-      echo "Chowning concrete5 directories that need to be readable..."
-      chown www-data -R "/data/example.com/public_html/packages"
-      chown www-data -R "/data/example.com/public_html/application/config"
-      chown www-data -R "/data/example.com/public_html/application/files"
+      if [ "$IS_LEGACY" != "true" ]; then
+        echo "Chowning concrete5.7.x directories that need to be readable..."
+        chown www-data -R "/data/example.com/public_html/packages"
+        chown www-data -R "/data/example.com/public_html/application/config"
+        chown www-data -R "/data/example.com/public_html/application/files"
+      else
+        echo "Chowning concrete5.6.x directories that need to be readable..."
+        chown www-data -R "/data/example.com/public_html/packages"
+        chown www-data -R "/data/example.com/public_html/config"
+        chown www-data -R "/data/example.com/public_html/files"
+      fi
   else
       echo "Running in KVM mode, adding apache user & altering MySQL config..."
       CUID=$(stat -c %u /data)

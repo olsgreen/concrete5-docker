@@ -5,6 +5,7 @@ MAINTAINER Oliver Green green2go@gmail.com
 ENV DB_NAME new_database
 ENV DB_USER new_user
 ENV DB_PASSWORD new_password
+ENV IS_LEGACY false
 
 ADD run_stack /usr/local/bin/
 
