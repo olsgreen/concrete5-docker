@@ -1,0 +1,57 @@
+#!/bin/bash
+
+if [[ ! -d "/data/mysql" && "$DB_NAME" != "" ]]; then
+  echo "Preparing MySQL data..."
+  mkdir "/data/mysql"
+  cp -R "/var/lib/mysql/" "/data/"
+  chown mysql -R "/data/mysql"
+fi
+
+if [ ! -d "/data/example.com" ]; then
+  echo "Preparing Apache data..."
+  cp -R "/installer/example.com/" "/data/example.com/"
+  mv -f "/data/example.com/public_html/htaccess.txt" "/data/example.com/public_html/.htaccess"
+
+  virt-what &> "/installer/vmstat"
+  VS_STAT="$(cat /installer/vmstat)"
+
+  if [ "$VS_STAT" != "kvm" ]; then
+      if [ "$IS_LEGACY" != "true" ]; then
+        echo "Chowning concrete5.7.x directories that need to be readable..."
+        chown www-data -R "/data/example.com/public_html/packages"
+        chown www-data -R "/data/example.com/public_html/application/config"
+        chown www-data -R "/data/example.com/public_html/application/files"
+      else
+        echo "Chowning concrete5.6.x directories that need to be readable..."
+        chown www-data -R "/data/example.com/public_html/packages"
+        chown www-data -R "/data/example.com/public_html/config"
+        chown www-data -R "/data/example.com/public_html/files"
+      fi
+  else
+      echo "Running in KVM mode, adding apache user & altering MySQL config..."
+      CUID=$(stat -c %u /data)
+      adduser --system --uid=$CUID c5apache2
+      echo "APACHE_RUN_USER=c5apache2" >> "/etc/apache2/envvars"
+
+      mv "/etc/mysql/my.cnf" "/etc/mysql/my.cnf.bkp"
+      sed 's/= mysql/= c5apache2/g' "/etc/mysql/my.cnf.bkp" > "/etc/mysql/my.cnf"
+      chown -R c5apache2 /var/run/mysql* /var/logs/mysql*
+  fi
+fi
+
+if [ "$DB_NAME" != "" ]; then
+  /etc/init.d/mysql start
+fi
+
+if [[ -f "/installer/database_setup" && "$DB_NAME" != "" ]]; then
+  echo "Generating database defaults..."
+  php -f "/installer/database_setup" > "/installer/commands.sql" 
+fi
+
+if [ -f "/installer/commands.sql" ]; then
+  echo "Setting database defaults..."
+  mysql --password=Admin2015 mysql < "/installer/commands.sql"
+fi
+
+echo "Removing installer directory..."
+rm "/installer" -Rf

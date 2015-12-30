@@ -10,6 +10,7 @@ ENV IS_LEGACY false
 
 # MySQL & apache post-start stuff & first run
 ADD run_stack /usr/local/bin/
+ADD first_run /usr/local/bin/
 
 # Set service configurations
 RUN rm -v /etc/mysql/my.cnf
