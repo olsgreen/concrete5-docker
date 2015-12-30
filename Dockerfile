@@ -3,10 +3,10 @@ FROM linode/lamp
 MAINTAINER Oliver Green green2go@gmail.com
 
 # Package source URL
-ENV PACKAGE_URL http://www.concrete5.org/download_file/-/view/84191/
+ENV PACKAGE_URL https://www.concrete5.org/download_file/-/view/75930/8497/
 
 # If using <= 5.6.x set to true
-ENV IS_LEGACY false
+ENV IS_LEGACY true
 
 # MySQL & apache post-start stuff & first run
 ADD run_stack /usr/local/bin/
